@@ -1,4 +1,13 @@
 package com.tiangalo.products.domain.model;
 
-public record CategoryId() {
+import java.util.UUID;
+
+public record CategoryId(
+        UUID uuid
+) {
+    public CategoryId {
+        if (uuid == null) {
+            throw new IllegalArgumentException("Category id cannot be null");
+        }
+    }
 }

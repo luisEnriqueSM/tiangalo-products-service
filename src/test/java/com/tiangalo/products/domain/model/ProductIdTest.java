@@ -27,8 +27,7 @@ public class ProductIdTest {
                 IllegalArgumentException.class,
                 () -> new ProductId(null)
         );
-
-        assertEquals("Product id cannot be null", exception.getMessage());
+        assertEquals("ProductId cannot be null", exception.getMessage());
     }
 
     @Test

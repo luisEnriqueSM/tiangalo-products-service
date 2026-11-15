@@ -7,7 +7,7 @@ public record ProductId(
 ) {
     public ProductId {
         if (id == null) {
-            throw new IllegalArgumentException("Product id cannot be null");
+            throw new IllegalArgumentException("ProductId cannot be null");
         }
     }
 }
