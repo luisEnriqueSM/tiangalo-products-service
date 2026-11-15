@@ -103,4 +103,84 @@ public class ProductTest {
         assertNotSame(first, second);
         assertThat(first.getId()).isNotEqualTo(second.getId());
     }
+
+    @Test
+    void renameShouldUpdateName(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+        ProductId productId = product.getId();
+
+        String newName = "Samsung Smart TV";
+        product.rename(newName);
+
+        assertThat(product).isNotNull();
+        assertThat(product.getId()).isEqualTo(productId);
+        assertThat(product.getName()).isEqualTo(newName);
+        assertThat(product.getDescription()).isEqualTo(description);
+        assertThat(product.getCategoryId()).isEqualTo(categoryId);
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.DRAFT);
+    }
+
+    @Test
+    void renameShouldRejectNullName(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.rename(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("name is required");
+    }
+
+    @Test
+    void renameShouldRejectBlankName(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.rename(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("name is required");
+    }
+
+    @Test
+    void renameShouldRejectWhitespaceName(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.rename(" "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("name is required");
+    }
+
+    @Test
+    void renameShouldPreserveNameOnFailure(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.rename(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("name is required");
+
+        assertThat(product.getName()).isEqualTo(name);
+    }
+
+    @Test
+    void renameShouldIgnoreSameName(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        product.rename(name);
+        assertThat(product.getName()).isEqualTo(name);
+    }
 }

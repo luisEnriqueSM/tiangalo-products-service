@@ -37,6 +37,14 @@ public class Product {
                 ProductStatus.DRAFT);
     }
 
+    public void rename(String newName){
+        validateRequiredText(newName, "name");
+        if(newName.equals(this.name)){
+            return;
+        }
+        this.name = newName;
+    }
+
     private static void validateRequiredText(String value, String fieldName){
         if(value == null || value.isBlank()){
             throw new IllegalArgumentException(fieldName + " is required");
