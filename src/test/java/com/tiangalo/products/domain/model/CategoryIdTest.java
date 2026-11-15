@@ -19,7 +19,7 @@ public class CategoryIdTest {
 
     @Test
     void shouldThrowExceptionWhenUUIDIsNull(){
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        NullPointerException exception = assertThrows(NullPointerException.class,
                 () -> new CategoryId(null));
         assertEquals("Category id cannot be null", exception.getMessage());
     }

@@ -23,8 +23,8 @@ public class ProductIdTest {
     @Test
     void shouldThrowExceptionWhenIdIsNull(){
         // Act & assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        NullPointerException exception = assertThrows(
+                NullPointerException.class,
                 () -> new ProductId(null)
         );
         assertEquals("ProductId cannot be null", exception.getMessage());
