@@ -183,4 +183,84 @@ public class ProductTest {
         product.rename(name);
         assertThat(product.getName()).isEqualTo(name);
     }
+
+    @Test
+    void changeDescriptionShouldChangeDescription(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+        ProductId productId = product.getId();
+
+        String newDescription = "66 inches TV";
+        product.changeDescription(newDescription);
+
+        assertThat(product).isNotNull();
+        assertThat(product.getId()).isEqualTo(productId);
+        assertThat(product.getName()).isEqualTo(name);
+        assertThat(product.getDescription()).isEqualTo(newDescription);
+        assertThat(product.getCategoryId()).isEqualTo(categoryId);
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.DRAFT);
+    }
+
+    @Test
+    void changeDescriptionShouldRejectNullDescription(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.changeDescription(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("description is required");
+    }
+
+    @Test
+    void changeDescriptionShouldRejectBlankDescription(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.changeDescription(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("description is required");
+    }
+
+    @Test
+    void changeDescriptionShouldRejectWhitespaceDescription(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.changeDescription("   "))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("description is required");
+    }
+
+    @Test
+    void changeDescriptionShouldPreserveDescriptionOnFailure(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.changeDescription(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("description is required");
+
+        assertThat(product.getDescription()).isEqualTo(description);
+    }
+
+    @Test
+    void changeDescriptionShouldIgnoreSameDescription(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        product.changeDescription(description);
+        assertThat(product.getDescription()).isEqualTo(description);
+    }
 }

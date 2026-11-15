@@ -1,7 +1,5 @@
 package com.tiangalo.products.domain.model;
 
-import java.util.UUID;
-
 public class Product {
 
     private final ProductId id;
@@ -43,6 +41,14 @@ public class Product {
             return;
         }
         this.name = newName;
+    }
+
+    public void changeDescription(String newDescription){
+        validateRequiredText(newDescription, "description");
+        if(newDescription.equals(this.description)){
+            return;
+        }
+        this.description = newDescription;
     }
 
     private static void validateRequiredText(String value, String fieldName){
