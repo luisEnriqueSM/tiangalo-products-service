@@ -263,4 +263,90 @@ public class ProductTest {
         product.changeDescription(description);
         assertThat(product.getDescription()).isEqualTo(description);
     }
+
+    @Test
+    void activateShouldActivateDraftProduct(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        product.activate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.ACTIVE);
+    }
+
+    @Test
+    void activateShouldReactivateInactiveProduct(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        product.activate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.ACTIVE);
+
+        product.deactivate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.INACTIVE);
+
+        product.activate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.ACTIVE);
+    }
+
+    @Test
+    void activateShouldNotDoAnythingForActiveProduct(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        product.activate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.ACTIVE);
+
+        product.activate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.ACTIVE);
+    }
+
+    @Test
+    void deactivateShouldDeactivateActiveProduct(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        product.activate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.ACTIVE);
+
+        product.deactivate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.INACTIVE);
+    }
+
+    @Test
+    void deactivateShouldNotDoAnythingForInactiveProduct(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        product.activate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.ACTIVE);
+
+        product.deactivate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.INACTIVE);
+
+        product.deactivate();
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.INACTIVE);
+    }
+
+    @Test
+    void deactivateShouldRejectDraftProduct(){
+        String name = "Smart TV";
+        String description = "55 inches TV";
+        CategoryId categoryId = CategoryId.newId();
+        Product product = Product.create(name, description, categoryId);
+
+        assertThatThrownBy(() -> product.deactivate())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Cannot deactivate this product");
+        assertThat(product.getStatus()).isEqualTo(ProductStatus.DRAFT);
+    }
 }

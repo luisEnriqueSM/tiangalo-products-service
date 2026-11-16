@@ -51,6 +51,20 @@ public class Product {
         this.description = newDescription;
     }
 
+    public void activate(){
+        if(this.status == ProductStatus.INACTIVE || this.status == ProductStatus.DRAFT){
+            this.status = ProductStatus.ACTIVE;
+        }
+    }
+
+    public void deactivate(){
+        if(this.status == ProductStatus.DRAFT){
+            throw new IllegalStateException("Cannot deactivate this product");
+        } else if(this.status == ProductStatus.ACTIVE){
+            this.status = ProductStatus.INACTIVE;
+        }
+    }
+
     private static void validateRequiredText(String value, String fieldName){
         if(value == null || value.isBlank()){
             throw new IllegalArgumentException(fieldName + " is required");
